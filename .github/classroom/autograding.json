@@ -1,0 +1,151 @@
+{
+  "tests": [
+    {
+      "name": "E1. make genera el ejecutable",
+      "setup": "apt-get install -y make gcc > /dev/null 2>&1 || true",
+      "run": "cd ejercicio1 && make && test -f suma",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E1. Suma correcta (3 + 4 = 7)",
+      "setup": "apt-get install -y make gcc > /dev/null 2>&1 || true",
+      "run": "cd ejercicio1 && make && echo '3 4' | ./suma | grep -q '3 + 4 = 7'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E1. Suma correcta (10 + 5 = 15)",
+      "setup": "apt-get install -y make gcc > /dev/null 2>&1 || true",
+      "run": "cd ejercicio1 && make && echo '10 5' | ./suma | grep -q '10 + 5 = 15'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E1. make clean elimina el ejecutable",
+      "setup": "apt-get install -y make gcc > /dev/null 2>&1 || true",
+      "run": "cd ejercicio1 && make && make clean && ! test -f suma",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E1. Makefile usa la variable $(CC)",
+      "setup": "",
+      "run": "grep -q '$(CC)' ejercicio1/Makefile",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 5
+    },
+    {
+      "name": "E2. make genera el ejecutable",
+      "setup": "apt-get install -y make gcc flex > /dev/null 2>&1 || true",
+      "run": "cd ejercicio2 && make && test -f scanner2",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E2. Reconoce numero 42",
+      "setup": "apt-get install -y make gcc flex > /dev/null 2>&1 || true",
+      "run": "cd ejercicio2 && make && echo '42' | ./scanner2 | grep -q 'Numero: 42'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E2. Reconoce numero 7",
+      "setup": "apt-get install -y make gcc flex > /dev/null 2>&1 || true",
+      "run": "cd ejercicio2 && make && echo '7' | ./scanner2 | grep -q 'Numero: 7'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E2. make clean elimina los archivos generados",
+      "setup": "apt-get install -y make gcc flex > /dev/null 2>&1 || true",
+      "run": "cd ejercicio2 && make && make clean && ! test -f scanner2 && ! test -f lex.yy.c",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E2. Makefile invoca flex",
+      "setup": "",
+      "run": "grep -q 'flex' ejercicio2/Makefile",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 5
+    },
+    {
+      "name": "E3. make genera el ejecutable",
+      "setup": "apt-get install -y make gcc flex bison > /dev/null 2>&1 || true",
+      "run": "cd ejercicio3 && make && test -f calc3",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E3. Calcula 3 + 4 = 7",
+      "setup": "apt-get install -y make gcc flex bison > /dev/null 2>&1 || true",
+      "run": "cd ejercicio3 && make && printf '3 + 4\\n' | ./calc3 | grep -q '= 7'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E3. Calcula 10 - 3 = 7",
+      "setup": "apt-get install -y make gcc flex bison > /dev/null 2>&1 || true",
+      "run": "cd ejercicio3 && make && printf '10 - 3\\n' | ./calc3 | grep -q '= 7'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E3. Calcula 2 * 5 = 10",
+      "setup": "apt-get install -y make gcc flex bison > /dev/null 2>&1 || true",
+      "run": "cd ejercicio3 && make && printf '2 * 5\\n' | ./calc3 | grep -q '= 10'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E3. Makefile invoca bison",
+      "setup": "",
+      "run": "grep -q 'bison' ejercicio3/Makefile",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 5
+    },
+    {
+      "name": "E4. make genera el ejecutable",
+      "setup": "apt-get install -y make gcc > /dev/null 2>&1 || true",
+      "run": "cd ejercicio4 && make && test -f programa",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E4. Calcula Suma: 8",
+      "setup": "apt-get install -y make gcc > /dev/null 2>&1 || true",
+      "run": "cd ejercicio4 && make && echo '5 3' | ./programa | grep -q 'Suma: 8'",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 30, "points": 5
+    },
+    {
+      "name": "E4. Makefile usa regla de patron %.o",
+      "setup": "",
+      "run": "grep -q '%.o' ejercicio4/Makefile",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 5
+    },
+    {
+      "name": "P1. Segunda ejecucion sin cambios no recompila",
+      "setup": "",
+      "run": "grep -qE '^P1=NO_RECOMPILA$' README.md",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 4
+    },
+    {
+      "name": "P2. clean no genera un archivo",
+      "setup": "",
+      "run": "grep -qE '^P2=NO$' README.md",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 3
+    },
+    {
+      "name": "P3. Para que sirve .PHONY",
+      "setup": "",
+      "run": "grep -qE '^P3=PARA_EVITAR_CONFLICTOS_DE_NOMBRES$' README.md",
+      "input": "", "output": "", "comparison": "included",
+      "timeout": 10, "points": 3
+    }
+  ]
+}

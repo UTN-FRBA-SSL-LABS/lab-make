@@ -1,0 +1,241 @@
+name: Autograding
+
+on:
+  push:
+    branches: [ "**" ]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  autograding:
+    name: Autograding
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Make, GCC, Flex y Bison
+        run: sudo apt-get install -y make gcc flex bison
+
+      # ── Ejercicio 1: Makefile básico con gcc ────────────────────────
+
+      - name: "E1. make genera el ejecutable"
+        id: e1_compile
+        continue-on-error: true
+        run: cd ejercicio1 && make && test -f suma
+
+      - name: "E1. Suma correcta (3 + 4 = 7)"
+        id: e1_suma1
+        continue-on-error: true
+        run: cd ejercicio1 && make && echo '3 4' | ./suma | grep -q '3 + 4 = 7'
+
+      - name: "E1. Suma correcta (10 + 5 = 15)"
+        id: e1_suma2
+        continue-on-error: true
+        run: cd ejercicio1 && make && echo '10 5' | ./suma | grep -q '10 + 5 = 15'
+
+      - name: "E1. make clean elimina el ejecutable"
+        id: e1_clean
+        continue-on-error: true
+        run: cd ejercicio1 && make && make clean && ! test -f suma
+
+      - name: "E1. Makefile usa la variable $(CC)"
+        id: e1_cc
+        continue-on-error: true
+        run: grep -q '$(CC)' ejercicio1/Makefile
+
+      # ── Ejercicio 2: Makefile con Flex ──────────────────────────────
+
+      - name: "E2. make genera el ejecutable"
+        id: e2_compile
+        continue-on-error: true
+        run: cd ejercicio2 && make && test -f scanner2
+
+      - name: "E2. Reconoce numero 42"
+        id: e2_num42
+        continue-on-error: true
+        run: cd ejercicio2 && make && echo '42' | ./scanner2 | grep -q 'Numero: 42'
+
+      - name: "E2. Reconoce numero 7"
+        id: e2_num7
+        continue-on-error: true
+        run: cd ejercicio2 && make && echo '7' | ./scanner2 | grep -q 'Numero: 7'
+
+      - name: "E2. make clean elimina los archivos generados"
+        id: e2_clean
+        continue-on-error: true
+        run: cd ejercicio2 && make && make clean && ! test -f scanner2 && ! test -f lex.yy.c
+
+      - name: "E2. Makefile invoca flex"
+        id: e2_flex
+        continue-on-error: true
+        run: grep -q 'flex' ejercicio2/Makefile
+
+      # ── Ejercicio 3: Makefile con Flex + Bison ──────────────────────
+
+      - name: "E3. make genera el ejecutable"
+        id: e3_compile
+        continue-on-error: true
+        run: cd ejercicio3 && make && test -f calc3
+
+      - name: "E3. Calcula 3 + 4 = 7"
+        id: e3_suma
+        continue-on-error: true
+        run: cd ejercicio3 && make && printf '3 + 4\n' | ./calc3 | grep -q '= 7'
+
+      - name: "E3. Calcula 10 - 3 = 7"
+        id: e3_resta
+        continue-on-error: true
+        run: cd ejercicio3 && make && printf '10 - 3\n' | ./calc3 | grep -q '= 7'
+
+      - name: "E3. Calcula 2 * 5 = 10"
+        id: e3_mult
+        continue-on-error: true
+        run: cd ejercicio3 && make && printf '2 * 5\n' | ./calc3 | grep -q '= 10'
+
+      - name: "E3. Makefile invoca bison"
+        id: e3_bison
+        continue-on-error: true
+        run: grep -q 'bison' ejercicio3/Makefile
+
+      # ── Ejercicio 4: Makefile avanzado (múltiples archivos) ─────────
+
+      - name: "E4. make genera el ejecutable"
+        id: e4_compile
+        continue-on-error: true
+        run: cd ejercicio4 && make && test -f programa
+
+      - name: "E4. Calcula Suma: 8"
+        id: e4_suma
+        continue-on-error: true
+        run: cd ejercicio4 && make && echo '5 3' | ./programa | grep -q 'Suma: 8'
+
+      - name: "E4. Makefile usa regla de patron %.o"
+        id: e4_patron
+        continue-on-error: true
+        run: grep -q '%.o' ejercicio4/Makefile
+
+      # ── Preguntas de reflexión ───────────────────────────────────────
+
+      - name: "P1. Segunda ejecucion sin cambios no recompila"
+        id: p1
+        continue-on-error: true
+        run: grep -qE '^P1=NO_RECOMPILA$' README.md
+
+      - name: "P2. clean no genera un archivo"
+        id: p2
+        continue-on-error: true
+        run: grep -qE '^P2=NO$' README.md
+
+      - name: "P3. Para que sirve .PHONY"
+        id: p3
+        continue-on-error: true
+        run: grep -qE '^P3=PARA_EVITAR_CONFLICTOS_DE_NOMBRES$' README.md
+
+      # ── Puntaje final ────────────────────────────────────────────────
+      - name: Calcular puntaje
+        if: always()
+        env:
+          O_E1_COMPILE: ${{ steps.e1_compile.outcome }}
+          O_E1_SUMA1:   ${{ steps.e1_suma1.outcome }}
+          O_E1_SUMA2:   ${{ steps.e1_suma2.outcome }}
+          O_E1_CLEAN:   ${{ steps.e1_clean.outcome }}
+          O_E1_CC:      ${{ steps.e1_cc.outcome }}
+          O_E2_COMPILE: ${{ steps.e2_compile.outcome }}
+          O_E2_NUM42:   ${{ steps.e2_num42.outcome }}
+          O_E2_NUM7:    ${{ steps.e2_num7.outcome }}
+          O_E2_CLEAN:   ${{ steps.e2_clean.outcome }}
+          O_E2_FLEX:    ${{ steps.e2_flex.outcome }}
+          O_E3_COMPILE: ${{ steps.e3_compile.outcome }}
+          O_E3_SUMA:    ${{ steps.e3_suma.outcome }}
+          O_E3_RESTA:   ${{ steps.e3_resta.outcome }}
+          O_E3_MULT:    ${{ steps.e3_mult.outcome }}
+          O_E3_BISON:   ${{ steps.e3_bison.outcome }}
+          O_E4_COMPILE: ${{ steps.e4_compile.outcome }}
+          O_E4_SUMA:    ${{ steps.e4_suma.outcome }}
+          O_E4_PATRON:  ${{ steps.e4_patron.outcome }}
+          O_P1:         ${{ steps.p1.outcome }}
+          O_P2:         ${{ steps.p2.outcome }}
+          O_P3:         ${{ steps.p3.outcome }}
+        run: |
+          pts() { [ "$1" = "success" ] && echo "$2" || echo 0; }
+          row() { [ "$2" = "success" ] && echo "| $1 | ✅ | $3 / $3 |" || echo "| $1 | ❌ | 0 / $3 |"; }
+
+          SCORE=0
+          SCORE=$((SCORE + $(pts "$O_E1_COMPILE" 5)))
+          SCORE=$((SCORE + $(pts "$O_E1_SUMA1"   5)))
+          SCORE=$((SCORE + $(pts "$O_E1_SUMA2"   5)))
+          SCORE=$((SCORE + $(pts "$O_E1_CLEAN"   5)))
+          SCORE=$((SCORE + $(pts "$O_E1_CC"      5)))
+          SCORE=$((SCORE + $(pts "$O_E2_COMPILE" 5)))
+          SCORE=$((SCORE + $(pts "$O_E2_NUM42"   5)))
+          SCORE=$((SCORE + $(pts "$O_E2_NUM7"    5)))
+          SCORE=$((SCORE + $(pts "$O_E2_CLEAN"   5)))
+          SCORE=$((SCORE + $(pts "$O_E2_FLEX"    5)))
+          SCORE=$((SCORE + $(pts "$O_E3_COMPILE" 5)))
+          SCORE=$((SCORE + $(pts "$O_E3_SUMA"    5)))
+          SCORE=$((SCORE + $(pts "$O_E3_RESTA"   5)))
+          SCORE=$((SCORE + $(pts "$O_E3_MULT"    5)))
+          SCORE=$((SCORE + $(pts "$O_E3_BISON"   5)))
+          SCORE=$((SCORE + $(pts "$O_E4_COMPILE" 5)))
+          SCORE=$((SCORE + $(pts "$O_E4_SUMA"    5)))
+          SCORE=$((SCORE + $(pts "$O_E4_PATRON"  5)))
+          SCORE=$((SCORE + $(pts "$O_P1"         4)))
+          SCORE=$((SCORE + $(pts "$O_P2"         3)))
+          SCORE=$((SCORE + $(pts "$O_P3"         3)))
+
+          {
+            echo "## Puntaje: $SCORE / 100"
+            echo ""
+            echo "| Test | Resultado | Puntos |"
+            echo "|------|:---------:|-------:|"
+            row "E1. make genera el ejecutable"                    "$O_E1_COMPILE" 5
+            row "E1. Suma correcta (3 + 4 = 7)"                   "$O_E1_SUMA1"   5
+            row "E1. Suma correcta (10 + 5 = 15)"                 "$O_E1_SUMA2"   5
+            row "E1. make clean elimina el ejecutable"             "$O_E1_CLEAN"   5
+            row "E1. Makefile usa la variable \$(CC)"              "$O_E1_CC"      5
+            row "E2. make genera el ejecutable"                    "$O_E2_COMPILE" 5
+            row "E2. Reconoce numero 42"                           "$O_E2_NUM42"   5
+            row "E2. Reconoce numero 7"                            "$O_E2_NUM7"    5
+            row "E2. make clean elimina los archivos generados"    "$O_E2_CLEAN"   5
+            row "E2. Makefile invoca flex"                         "$O_E2_FLEX"    5
+            row "E3. make genera el ejecutable"                    "$O_E3_COMPILE" 5
+            row "E3. Calcula 3 + 4 = 7"                           "$O_E3_SUMA"    5
+            row "E3. Calcula 10 - 3 = 7"                          "$O_E3_RESTA"   5
+            row "E3. Calcula 2 * 5 = 10"                          "$O_E3_MULT"    5
+            row "E3. Makefile invoca bison"                        "$O_E3_BISON"   5
+            row "E4. make genera el ejecutable"                    "$O_E4_COMPILE" 5
+            row "E4. Calcula Suma: 8"                              "$O_E4_SUMA"    5
+            row "E4. Makefile usa regla de patron %.o"             "$O_E4_PATRON"  5
+            row "P1. Segunda ejecucion sin cambios"                "$O_P1"         4
+            row "P2. clean no genera un archivo"                   "$O_P2"         3
+            row "P3. Para que sirve .PHONY"                        "$O_P3"         3
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "  Puntaje: $SCORE / 100"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+          if [ "$SCORE" -eq 100 ]; then
+            echo ""
+            echo "Felicitaciones! Obtuviste 100/100. Laboratorio completado."
+          elif [ "$SCORE" -ge 60 ]; then
+            echo ""
+            echo "Aprobado! Obtuviste $SCORE/100."
+            echo "Revisa los tests con X en el resumen si queres mejorar tu puntaje."
+          else
+            echo ""
+            echo "Puntaje insuficiente: $SCORE/100 (minimo 60)."
+            echo "Revisa los tests que no pasaron y volve a hacer push."
+            exit 1
+          fi
+
+      # ── Reporte a GitHub Classroom ───────────────────────────────────
+      - name: Resultado autograding
+        if: always()
+        uses: education/autograding@v1
+        continue-on-error: true
