@@ -640,29 +640,11 @@ P3=???
 
 ---
 
-## Puntaje
+## Entrega
 
-| Criterio | Pts |
-|----------|----:|
-| E1. `make` genera el ejecutable | 5 |
-| E1. Suma correcta (3 + 4 = 7) | 5 |
-| E1. Suma correcta (10 + 5 = 15) | 5 |
-| E1. `make clean` elimina el ejecutable | 5 |
-| E1. Makefile usa la variable `$(CC)` | 5 |
-| E2. `make` genera el ejecutable | 5 |
-| E2. Reconoce número 42 | 5 |
-| E2. Reconoce número 7 | 5 |
-| E2. `make clean` elimina los archivos generados | 5 |
-| E2. Makefile invoca `flex` | 5 |
-| E3. `make` genera el ejecutable | 5 |
-| E3. Calcula 3 + 4 = 7 | 5 |
-| E3. Calcula 10 - 3 = 7 | 5 |
-| E3. Calcula 2 * 5 = 10 | 5 |
-| E3. Makefile invoca `bison` | 5 |
-| E4. `make` genera el ejecutable | 5 |
-| E4. Calcula Suma: 8 | 5 |
-| E4. Makefile usa regla de patrón `%.o` | 5 |
-| P1. Segunda ejecución sin cambios | 4 |
-| P2. `clean` no genera un archivo | 3 |
-| P3. Para qué sirve `.PHONY` | 3 |
-| **Total** | **100** |
+1. Completá todos los `TODO` en los archivos `Makefile`
+2. Respondé las preguntas de reflexión en este `README.md`
+3. Probá cada ejercicio localmente hasta obtener la salida esperada
+4. Hacé commit y push de tus cambios en `main`
+
+El autograding va a compilar y ejecutar cada ejercicio automáticamente.
