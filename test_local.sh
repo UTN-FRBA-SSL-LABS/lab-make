@@ -15,7 +15,7 @@ RESET='\033[0m'
 check() {
   local id="$1" desc="$2" pts="$3"
   shift 3
-  if "$@" 2>/dev/null; then
+  if "$@" &>/dev/null; then
     echo -e "${GREEN}✅ $id. $desc (+$pts pts)${RESET}"
     PASS=$((PASS + 1))
     SCORE=$((SCORE + pts))
