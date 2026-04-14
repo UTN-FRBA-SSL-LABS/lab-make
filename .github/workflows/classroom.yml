@@ -3,6 +3,9 @@ name: Autograding
 on:
   push:
     branches: [ "**" ]
+    paths:
+      - "**/Makefile"
+      - "README.md"
 
 permissions:
   checks: write
