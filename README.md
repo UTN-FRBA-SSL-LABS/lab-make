@@ -642,14 +642,32 @@ P3=???
 
 ## Entrega
 
-1. Completá todos los `TODO` en los archivos `Makefile`
-2. Respondé las preguntas de reflexión en este `README.md`
-3. Verificá tu puntaje localmente antes de pushear:
+### Checklist
+
+- [ ] Todos los `TODO` completados en los archivos `Makefile`
+- [ ] Preguntas P1, P2 y P3 respondidas en este `README.md`
+- [ ] `make test` pasa localmente
+- [ ] Todo pusheado a `main`
+
+### Verificación local
+
+Antes de hacer push, verificá tu puntaje con:
 
 ```bash
 make test
 ```
 
-4. Hacé commit y push de tus cambios en `main`
+**Flujo recomendado:** hacé commits frecuentes mientras avanzás, usá `make test` para verificar tu progreso, y dejá el push para cuando una parte esté realmente lista.
 
-> **Tip:** el workflow de corrección solo se activa cuando pusheás cambios en algún `Makefile` o en `README.md`. Para todo lo demás, `make test` te da el mismo resultado sin consumir minutos de GitHub Actions.
+### Corrección automática
+
+Cuando pusheás cambios en algún `Makefile` o en `README.md`, GitHub ejecuta el workflow de corrección que valida los mismos checks y calcula tu puntaje oficial.
+
+> ⚠️ **Evitá pushes innecesarios.** Cada ejecución consume cómputo en servidores de GitHub — un recurso compartido. `make test` te da el mismo resultado en tu terminal sin costo.
+
+Para ver los resultados:
+
+1. Entrá a tu repositorio en GitHub
+2. Hacé click en la pestaña **Actions**
+3. Hacé click en la ejecución más reciente → job **Autograding**
+4. Al final del job vas a ver la tabla con el resultado de cada check y el puntaje total
