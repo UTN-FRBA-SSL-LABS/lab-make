@@ -644,7 +644,12 @@ P3=???
 
 1. Completá todos los `TODO` en los archivos `Makefile`
 2. Respondé las preguntas de reflexión en este `README.md`
-3. Probá cada ejercicio localmente hasta obtener la salida esperada
+3. Verificá tu puntaje localmente antes de pushear:
+
+```bash
+make test
+```
+
 4. Hacé commit y push de tus cambios en `main`
 
-El autograding va a compilar y ejecutar cada ejercicio automáticamente.
+> **Tip:** el workflow de corrección solo se activa cuando pusheás cambios en algún `Makefile` o en `README.md`. Para todo lo demás, `make test` te da el mismo resultado sin consumir minutos de GitHub Actions.
